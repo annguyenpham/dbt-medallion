@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Gold layer: Consumer-ready Customer dimension. Enriched with geography data from the intermediate layer."
+    columns:
+      - name: customer_id
+        description: "Unique identifier for a customer."
+        tests: [unique, not_null]
+      - name: customer_nation
+        description: "The nation where the customer resides."
+      - name: customer_region
+        description: "The broader region where the customer resides."
+  
+  - name: dim_parts
+    description: "Gold layer: Consumer-ready Part dimension."
+    columns:
+      - name: part_id
+        description: "Unique identifier for a part."
+        tests: [unique, not_null]
+
+  - name: fct_order_items
+    description: "Gold layer: Central transactional fact table at the line-item grain. Materialized incrementally for performance."
+    columns:
+      - name: order_item_id
+        description: "Primary key for the order line item."
+        tests: [unique, not_null]
+      - name: customer_id
+        description: "Foreign key linking to dim_customers."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
+      - name: extended_price
+        description: "Gross price of the item."
+        tests: [not_null, is_non_negative]
+      - name: discounted_price
+        description: "Calculated net price after applying the discount (extended_price * (1 - discount))."
+      - name: quantity
+        description: "Number of units purchased."
+        tests: [not_null, is_non_negative]

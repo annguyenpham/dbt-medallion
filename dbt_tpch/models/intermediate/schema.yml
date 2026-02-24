@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: int_locations_joined
+    description: "Silver layer: Denormalizes Nation and Region data into a single lookup model to prevent repeating joins downstream."
+    columns:
+      - name: nation_id
+        description: "Primary key for the nation."
+        tests: [unique, not_null]
+      - name: nation_name
+        description: "Text name of the country (e.g., 'VIETNAM', 'JAPAN')."
+      - name: region_name
+        description: "Text name of the geographic region (e.g., 'ASIA', 'EUROPE')."
