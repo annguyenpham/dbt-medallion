@@ -1,3 +1,16 @@
+# TPC-H Dimensional Modeling with dbt & Snowflake
+
+This project transforms the standard **Snowflake TPC-H Sample Dataset** (`SNOWFLAKE_SAMPLE_DATA.TPCH_SF1`) into a consumer-ready Star Schema. It leverages **dbt** to execute transformations using the **Medallion Architecture** (Bronze, Silver, Gold).
+
+## 🏛️ High-Level Architecture
+
+The pipeline extracts raw, highly normalized transactional data and processes it through three distinct layers to produce clean, optimized dimensional models for business intelligence and analytics.
+
+
+
+### Data Flow & Lineage
+
+```mermaid
 graph TD
     subgraph Snowflake_Source ["Snowflake Source"]
         S[("SNOWFLAKE_SAMPLE_DATA")]
@@ -44,3 +57,4 @@ graph TD
     %% Standardized dotted link syntax for GitHub
     dim_customers -.->|FK| fct_order_items
     dim_parts -.->|FK| fct_order_items
+```
