@@ -1,16 +1,3 @@
-# TPC-H Dimensional Modeling with dbt & Snowflake
-
-This project transforms the standard **Snowflake TPC-H Sample Dataset** (`SNOWFLAKE_SAMPLE_DATA.TPCH_SF1`) into a consumer-ready Star Schema. It leverages **dbt** to execute transformations using the **Medallion Architecture** (Bronze, Silver, Gold).
-
-## 🏛️ High-Level Architecture
-
-The pipeline extracts raw, highly normalized transactional data and processes it through three distinct layers to produce clean, optimized dimensional models for business intelligence and analytics.
-
-
-
-### Data Flow & Lineage
-
-```mermaid
 graph TD
     subgraph Snowflake_Source ["Snowflake Source"]
         S[("SNOWFLAKE_SAMPLE_DATA")]
@@ -35,8 +22,13 @@ graph TD
         fct_order_items[["fct_order_items<br/>Incremental"]]
     end
 
-    %% Relationships
-    S --> stg_orders & stg_lineitems & stg_customer & stg_part & stg_nation & stg_region
+    %% Relationships - safely separated to prevent layout engine crashes
+    S --> stg_orders
+    S --> stg_lineitems 
+    S --> stg_customer 
+    S --> stg_part 
+    S --> stg_nation 
+    S --> stg_region
     
     stg_nation --> int_locations
     stg_region --> int_locations
@@ -48,11 +40,7 @@ graph TD
 
     stg_orders --> fct_order_items
     stg_lineitems --> fct_order_items
-    dim_customers -. "FK" .-> fct_order_items
-    dim_parts -. "FK" .-> fct_order_items
-
-    stg_orders --> fct_order_items
-    stg_lineitems --> fct_order_items
-    dim_customers -. FK .-> fct_order_items
-    dim_parts -. FK .-> fct_order_items
-```
+    
+    %% Standardized dotted link syntax for GitHub
+    dim_customers -.->|FK| fct_order_items
+    dim_parts -.->|FK| fct_order_items
