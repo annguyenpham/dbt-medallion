@@ -55,3 +55,4 @@ graph TD
     stg_lineitems --> fct_order_items
     dim_customers -. FK .-> fct_order_items
     dim_parts -. FK .-> fct_order_items
+```
